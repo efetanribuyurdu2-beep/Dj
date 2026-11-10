@@ -8,7 +8,10 @@ FLOOR bir DJ performans ve karar verme stüdyosudur: bir mekân kurarsın, kalab
 
 ## Çalıştırma
 
+FLOOR bu depoda `floor/` klasöründe, Set Koçu’ndan bağımsız bir uygulama olarak yaşar.
+
 ```bash
+cd floor
 npm install
 npm run dev          # geliştirme sunucusu
 npm test             # simülasyon, süre hesabı, kalıcılık testleri (vitest)
