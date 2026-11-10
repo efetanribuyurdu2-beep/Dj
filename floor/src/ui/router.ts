@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 export type Route =
   | { name: 'studio' }
+  | { name: 'deck' }
   | { name: 'room'; id: string }
   | { name: 'arc'; id: string }
   | { name: 'rehearse'; id: string }
@@ -10,6 +11,7 @@ export type Route =
 export function parseHash(hash: string): Route {
   const parts = hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   const [name, id] = parts;
+  if (name === 'deck') return { name: 'deck' };
   if (id && (name === 'room' || name === 'arc' || name === 'rehearse' || name === 'debrief')) {
     return { name, id: decodeURIComponent(id) } as Route;
   }
@@ -17,7 +19,9 @@ export function parseHash(hash: string): Route {
 }
 
 export function href(r: Route): string {
-  return r.name === 'studio' ? '#/' : `#/${r.name}/${encodeURIComponent(r.id)}`;
+  if (r.name === 'studio') return '#/';
+  if (r.name === 'deck') return '#/deck';
+  return `#/${r.name}/${encodeURIComponent(r.id)}`;
 }
 
 export function go(r: Route) {

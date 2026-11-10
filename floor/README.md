@@ -23,6 +23,30 @@ npx vite preview --port 4173 &
 npm run e2e
 ```
 
+## Deck: kendi parçaların, FLX2 ve stem'ler
+
+`#/deck` ekranı iki deck'li bir tarayıcı mikseridir:
+
+- **Dosyalar**: MP3/WAV/AIFF/FLAC sürükle-bırak. Dosyalar yalnızca tarayıcının IndexedDB deposunda kalır, sunucuya gitmez.
+- **Analiz** (cihazda, Web Worker): BPM ve tahmini beat grid, ton ve Camelot kodu (uyumlu tonlar), peak/RMS, clipping, dalga formu ve enerji eğrisi. Tahmindir; LUFS değildir.
+- **Mikser**: play/cue/sync (yalnızca tempo eşitler, faz senin kulağında), tempo ±6/8/16, trim, 3 bant EQ (kill), tek düğme filtre, kanal fader, crossfader, master limiter, canlı seviye ölçerler. Tempo değişince perde de değişir (key lock yok).
+- **DDJ-FLX2**: Web MIDI (bilgisayarda Chrome/Edge). Hazır eşleme yok: "Öğret" ile her kontrol bir kez tanıtılır ve tarayıcıda saklanır. Pad'ler provada karar 1–6 olarak da öğretilebilir. iPad/Safari Web MIDI desteklemez; orada deck'ler dokunmatikle kullanılır.
+- **Stem'ler**: yerel Demucs yardımcısı (aşağıda). Vokal/davul/bas/diğer olarak ayrılır, deck'te pad'lerle açılıp kapanır.
+
+### Stem yardımcısı
+
+```bash
+# bir kez: Python 3.10+, ffmpeg, Demucs
+pip install demucs
+cd floor/stems-helper
+python server.py                     # http://127.0.0.1:7777
+python server.py --device mps        # Apple Silicon'da daha hızlı
+python server.py --allow-origin https://KULLANICI.github.io   # site Pages'teyse
+python -m unittest test_server.py    # protokol testleri (ffmpeg gerekir)
+```
+
+Yardımcı yalnızca 127.0.0.1'i dinler, izinli sitelere CORS verir ve iş bitince dosyaları siler. `--fake` yalnızca testtir: Demucs yerine kaba ffmpeg filtreleri kullanır ve arayüz bunu "test stem" diye işaretler.
+
 ## Akış
 
 Studio → Room Builder → Night Arc → Rehearsal (kararlar + curveball’lar) → Debrief → kaydet → yeniden aç.

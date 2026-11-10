@@ -15,6 +15,7 @@ import { go } from '../router';
 import { splitsOf, useRun } from '../useSim';
 import { Pulse } from '../audio';
 import { Timeline } from './Timeline';
+import { midi } from '../../audio/midi';
 
 export function Rehearsal({ session }: { session: Session }) {
   const store = useStore();
@@ -155,6 +156,18 @@ export function Rehearsal({ session }: { session: Session }) {
     window.addEventListener('keydown', on);
     return () => window.removeEventListener('keydown', on);
   }, [needsDecision, shiftOpen, decide, finished]);
+
+  // FLX2 pads (MIDI learn: "Karar 1–6") pick decisions too
+  const decideRef = useRef(decide);
+  decideRef.current = decide;
+  useEffect(
+    () =>
+      midi.onInput((i) => {
+        const m = /^decide\.(\d)$/.exec(i.action);
+        if (m && i.kind === 'button' && i.pressed) decideRef.current(MOVE_IDS[Number(m[1]) - 1]);
+      }),
+    [],
+  );
 
   // --- derived readouts ---
   const energy = roomEnergy(state, cfg.room);

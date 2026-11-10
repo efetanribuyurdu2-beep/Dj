@@ -1,4 +1,4 @@
-import { Component, type ReactNode } from 'react';
+import { Component, lazy, Suspense, type ReactNode } from 'react';
 import { t } from './i18n/tr';
 import { StoreProvider, useStore } from './store/store';
 import { href, useRoute, type Route } from './ui/router';
@@ -8,7 +8,9 @@ import { NightArc } from './ui/screens/NightArc';
 import { Rehearsal } from './ui/screens/Rehearsal';
 import { Debrief } from './ui/screens/Debrief';
 
-const STEPS: { name: Exclude<Route['name'], 'studio'>; n: string; label: string }[] = [
+const DeckScreen = lazy(() => import('./ui/deck/DeckScreen').then((m) => ({ default: m.DeckScreen })));
+
+const STEPS: { name: Exclude<Route['name'], 'studio' | 'deck'>; n: string; label: string }[] = [
   { name: 'room', n: '01', label: t.nav.room },
   { name: 'arc', n: '02', label: t.nav.arc },
   { name: 'rehearse', n: '03', label: t.nav.rehearse },
@@ -18,10 +20,16 @@ const STEPS: { name: Exclude<Route['name'], 'studio'>; n: string; label: string 
 function Shell() {
   const route = useRoute();
   const store = useStore();
-  const session = route.name !== 'studio' ? store.get(route.id) : undefined;
+  const session = route.name !== 'studio' && route.name !== 'deck' ? store.get(route.id) : undefined;
 
   let body: ReactNode;
   if (route.name === 'studio') body = <Studio />;
+  else if (route.name === 'deck')
+    body = (
+      <Suspense fallback={<p className="screen muted">Deck yükleniyor…</p>}>
+        <DeckScreen />
+      </Suspense>
+    );
   else if (!session)
     body = (
       <div className="screen">
@@ -63,9 +71,21 @@ function Shell() {
                 </a>
               );
             })}
+            <a className="step-link step-deck" href="#/deck">
+              <span className="mono step-n">05</span>
+              <span className="step-label">Deck</span>
+            </a>
           </nav>
         ) : (
-          <span className="topbar-note mono tiny">{t.nav.studio}</span>
+          <nav className="steps" aria-label="Bölümler">
+            <a className={`step-link${route.name === 'studio' ? ' is-current' : ''}`} href="#/" aria-current={route.name === 'studio' ? 'page' : undefined}>
+              <span className="step-label">Studio</span>
+            </a>
+            <a className={`step-link${route.name === 'deck' ? ' is-current' : ''}`} href="#/deck" aria-current={route.name === 'deck' ? 'page' : undefined}>
+              <span className="mono step-n">05</span>
+              <span className="step-label">Deck</span>
+            </a>
+          </nav>
         )}
       </header>
       {store.notice && (
@@ -87,7 +107,7 @@ function Shell() {
       <footer className="sitefoot tiny mono">
         <span>FLOOR · DJ Performance Studio</span>
         <span>{t.simNote}</span>
-        <span>Spotify, Rekordbox, djay veya donanım bağlantısı yoktur.</span>
+        <span>Spotify, Rekordbox veya djay bağlantısı yoktur. FLX2 yalnızca Deck’te, MIDI learn ile.</span>
       </footer>
     </div>
   );

@@ -109,6 +109,11 @@ export function Studio() {
               <span className="action-note">{t.studio.quickNote}</span>
             </button>
           </div>
+          <p className="deck-cta">
+            <a href="#/deck">
+              <span className="mono step-n">05</span> Deck — kendi MP3/WAV’larınla çal, analiz et, stem’lere ayır, FLX2 bağla →
+            </a>
+          </p>
         </div>
         <div className="hero-plan">
           <FloorPanel

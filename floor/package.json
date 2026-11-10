@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "test": "vitest run",
-    "e2e": "node scripts/e2e.cjs"
+    "e2e": "node scripts/e2e.cjs",
+    "e2e:deck": "node scripts/e2e-deck.cjs",
+    "test:helper": "python3 -m unittest stems-helper/test_server.py"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",
