@@ -1,0 +1,52 @@
+/* FLOOR design tokens — "after-hours editorial meets performance instrument". */
+:root {
+  color-scheme: dark;
+
+  /* surfaces: warm charcoal, not blue-black */
+  --ink-0: #14120f;
+  --ink-1: #1b1814;
+  --ink-2: #25211c;
+  --ink-3: #2f2a24;
+  --line: #3a342c;
+  --line-strong: #5b5248;
+
+  /* text */
+  --paper: #efe9df;
+  --paper-2: #d6cec1;
+  --stone: #9a8f81;
+  --stone-dim: #7c7266;
+
+  /* signal colours — used sparingly, each carries meaning */
+  --acid: #d7f24a; /* interaction + live state */
+  --acid-ink: #191c06;
+  --acid-dim: #8a9a33;
+  --amber: #f0a03c; /* heat, warnings, hit group */
+  --brick: #e0714a; /* negative / loss */
+  --sage: #a9c29b; /* explorers group */
+
+  /* groups */
+  --g-groove: var(--paper);
+  --g-hits: var(--amber);
+  --g-explorers: var(--sage);
+
+  --f-display: 'Bricolage Grotesque Variable', 'Arial Narrow', system-ui, sans-serif;
+  --f-sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --gutter: clamp(16px, 3vw, 40px);
+  --max: 1440px;
+  --r: 3px;
+  --ease: cubic-bezier(0.3, 0.7, 0.2, 1);
+  --t-fast: 140ms;
+  --t-med: 320ms;
+}
+
+/* The product is designed for dark rooms; a light theme is intentionally not offered.
+   Forced-colours / high contrast still get sensible system colours. */
+@media (forced-colors: active) {
+  :root {
+    --acid: Highlight;
+    --paper: CanvasText;
+    --ink-0: Canvas;
+  }
+}
